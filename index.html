@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Becky, Will You Be My Valentine?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            background: #fdf2f8;
+            color: #4a1c2e;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1496062031456-07b8f162a844c7?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            filter: blur(6px);
+            z-index: -1;
+        }
+        .container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            transition: opacity 0.8s ease;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 1rem;
+            color: #c2185b;
+            font-family: 'Dancing Script', cursive;
+        }
+        p {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+        .button-group {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(45deg, #e91e63, #ff4081);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+            min-height: 56px;
+            min-width: 140px;
+        }
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.4);
+        }
+        #noBtn {
+            background: linear-gradient(45deg, #ff5252, #ff1744);
+        }
+        #countdown {
+            font-size: 1.8rem;
+            margin: 2rem 0;
+            color: #c2185b;
+            font-weight: bold;
+        }
+        .final-message {
+            font-size: 1.8rem;
+            line-height: 1.6;
+        }
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            h1 { font-size: 2.3rem; }
+            p { font-size: 1.2rem; margin-bottom: 2rem; }
+            .card { padding: 2.5rem 1.5rem; border-radius: 20px; }
+            .btn { padding: 1rem 2rem; font-size: 1.2rem; min-height: 52px; }
+            .button-group { gap: 1.5rem; }
+        }
+        @media (max-width: 360px) {
+            h1 { font-size: 2.1rem; }
+            p { font-size: 1.1rem; }
+            .btn { padding: 0.9rem 1.8rem; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="container">
+        <div class="card" id="mainCard">
+            <h1 id="title">Becky, will you be my Valentine?</h1>
+            <p>I would be truly honored to spend Valentine's Day with you. It would mean the world to me.</p>
+            <div class="button-group">
+                <button id="yesBtn" class="btn">Yes</button>
+                <button id="noBtn" class="btn">No</button>
+            </div>
+        </div>
+
+        <div class="card" id="resultCard" style="display: none;">
+            <h1 id="resultTitle"></h1>
+            <p id="resultText" class="final-message"></p>
+            <div id="countdown"></div>
+            <button class="btn" onclick="location.reload()" style="margin-top: 2rem;">Try Again</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // Personalization
+        const params = new URLSearchParams(location.search);
+        const name = params.get('name') || 'Becky';
+        document.getElementById('title').textContent = `${name}, will you be my Valentine?`;
+
+        // Intro animation
+        gsap.from('#mainCard', { opacity: 0, y: 40, duration: 1.2, ease: 'power3.out' });
+
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainCard = document.getElementById('mainCard');
+        const resultCard = document.getElementById('resultCard');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultText = document.getElementById('resultText');
+        const countdownEl = document.getElementById('countdown');
+
+        function dodge(e) {
+            if (e.type === 'touchstart') e.preventDefault();
+            if (attempts >= maxAttempts) return;
+
+            attempts++;
+
+            // Safe bounds with generous padding (especially for mobile bars/notches)
+            const padding = 30;
+            const maxX = window.innerWidth - yesBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - yesBtn.offsetHeight - padding * 3;
+            const minX = padding;
+            const minY = padding * 2;
+
+            const randomX = minX + Math.random() * (maxX - minX);
+            const randomY = minY + Math.random() * (maxY - minY);
+
+            yesBtn.style.position = 'fixed';
+            yesBtn.style.zIndex = '100';
+
+            const duration = 0.5 - (attempts * 0.03); // Gets slightly faster
+
+            gsap.to(yesBtn, {
+                left: randomX,
+                top: randomY,
+                duration: duration > 0.2 ? duration : 0.2,
+                ease: 'power2.out'
+            });
+
+            if (attempts >= maxAttempts) {
+                setTimeout(showResult, 600, 'changed', 'I guess you’ve changed your mind.', 'That’s alright — there’s always next year.');
+            }
+        }
+
+        function showResult(type, title, text, showCountdown = false) {
+            gsap.to(mainCard, { opacity: 0, scale: 0.95, duration: 0.6, onComplete: () => {
+                mainCard.style.display = 'none';
+                resultCard.style.display = 'block';
+                resultTitle.textContent = title;
+                resultText.textContent = text;
+                gsap.from(resultCard, { opacity: 0, scale: 0.95, duration: 0.8, ease: 'back.out(1.3)' });
+                if (showCountdown) startCountdown();
+                if (type === 'yes') {
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4081', '#e91e63', '#ad1457'] });
+                }
+            }});
+        }
+
+        function accept() {
+            showResult('yes', 'Thank you, Becky!', 'I’m overjoyed that you said yes. I can’t wait to celebrate with you.', true);
+        }
+
+        function reject() {
+            showResult('no', 'That’s okay…', 'Maybe another time. I’ll keep hoping.', false);
+        }
+
+        function startCountdown() {
+            const target = new Date('2026-02-14T00:00:00').getTime();
+            setInterval(() => {
+                const now = Date.now();
+                const diff = target - now;
+                if (diff <= 0) {
+                    countdownEl.textContent = 'Happy Valentine’s Day!';
+                    return;
+                }
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                countdownEl.textContent = `Countdown to our day: ${d} days, ${h} hours, ${m} minutes, ${s} seconds`;
+            }, 1000);
+        }
+
+        // Events
+        yesBtn.addEventListener('mouseover', dodge);
+        yesBtn.addEventListener('touchstart', dodge);
+        yesBtn.addEventListener('click', accept);
+        noBtn.addEventListener('click', reject);
+    </script>
+</body>
+</html>
