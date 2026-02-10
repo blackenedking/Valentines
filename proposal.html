@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You, Becky ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            background: #fdf4f8;
+            color: #4a2535;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            filter: blur(5px) brightness(1.1);
+            z-index: -1;
+        }
+        .container {
+            position: relative;
+            padding: 2rem 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.93);
+            border-radius: 28px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 2.6rem;
+            margin: 0 0 1.8rem;
+            color: #c2185b;
+            font-family: 'Dancing Script', cursive;
+            line-height: 1.2;
+        }
+        p {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            margin-bottom: 1.8rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #countdown {
+            font-size: 1.6rem;
+            color: #c2185b;
+            font-weight: 600;
+            margin: 2.5rem 0;
+            line-height: 1.4;
+        }
+        .romantic-img {
+            width: 100%;
+            max-width: 380px;
+            border-radius: 20px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            display: block;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #e91e63, #ff6090);
+            border: none;
+            padding: 1.1rem 3rem;
+            font-size: 1.4rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .cta-btn:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 35px rgba(233, 30, 99, 0.4);
+        }
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            .container { padding: 1.5rem 1rem; }
+            .card { padding: 2.5rem 2rem; border-radius: 24px; }
+            h1 { font-size: 2.3rem; margin-bottom: 1.5rem; }
+            p { font-size: 1.15rem; margin-bottom: 1.6rem; }
+            #countdown { font-size: 1.4rem; margin: 2rem 0; }
+            .romantic-img { max-width: 320px; margin: 1.8rem auto; }
+            .cta-btn { padding: 1rem 2.8rem; font-size: 1.3rem; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 2.1rem; }
+            p { font-size: 1.1rem; }
+            #countdown { font-size: 1.3rem; }
+            .card { padding: 2rem 1.5rem; }
+            .cta-btn { padding: 0.9rem 2.5rem; font-size: 1.25rem; }
+        }
+        @media (max-width: 360px) {
+            h1 { font-size: 1.9rem; }
+            p { font-size: 1.05rem; }
+            #countdown { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="container">
+        <div class="card">
+            <h1 id="greeting">For You, Becky ❤️</h1>
+            
+            <p>Valentine's Day is almost here — a beautiful tradition celebrating love, affection, and the people who make our hearts beat a little faster.</p>
+            
+            <p>It's the perfect moment to share something special with someone who truly matters.</p>
+            
+            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Soft pink roses and hearts" class="romantic-img">
+            
+            <div id="countdown">Counting down...</div>
+            
+            <p>I have a little message just for you...</p>
+            
+            <a href="index.html" class="cta-btn">Answer Me ❤️</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        // Personalization
+        const params = new URLSearchParams(location.search);
+        const name = params.get('name') || 'Becky';
+        document.getElementById('greeting').textContent = `For You, ${name} ❤️`;
+
+        // Gentle fade-in
+        gsap.from('.card > *', {
+            opacity: 0,
+            y: 20,
+            duration: 1.2,
+            stagger: 0.3,
+            ease: 'power2.out'
+        });
+
+        // Live countdown to Valentine's Day 2026
+        function startCountdown() {
+            const target = new Date('2026-02-14T00:00:00').getTime();
+            const countdownEl = document.getElementById('countdown');
+
+            setInterval(() => {
+                const now = Date.now();
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    countdownEl.textContent = "Happy Valentine's Day! ❤️";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                countdownEl.innerHTML = `
+                    Only <strong>${days}</strong> days, 
+                    <strong>${hours}</strong> hours, 
+                    <strong>${minutes}</strong> minutes, and 
+                    <strong>${seconds}</strong> seconds<br>
+                    until Valentine's Day ❤️
+                `;
+            }, 1000);
+        }
+
+        startCountdown();
+    </script>
+</body>
+</html>
