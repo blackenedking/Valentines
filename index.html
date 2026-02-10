@@ -57,13 +57,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-        #countdown {
-            font-size: 1.6rem;
-            color: #c2185b;
-            font-weight: 600;
-            margin: 2.5rem 0;
-            line-height: 1.4;
-        }
         .romantic-img {
             width: 100%;
             max-width: 380px;
@@ -90,27 +83,72 @@
             transform: translateY(-6px);
             box-shadow: 0 14px 35px rgba(233, 30, 99, 0.4);
         }
+
+        /* Elegant countdown styles */
+        #countdown {
+            margin: 3rem 0;
+        }
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .unit {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 1.4rem 1.2rem;
+            min-width: 90px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(8px);
+        }
+        .number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #c2185b;
+            line-height: 1;
+        }
+        .label {
+            font-size: 1rem;
+            color: #4a2535;
+            margin-top: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .countdown-subtitle {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            color: #c2185b;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 640px) {
             .container { padding: 1.5rem 1rem; }
             .card { padding: 2.5rem 2rem; border-radius: 24px; }
             h1 { font-size: 2.3rem; margin-bottom: 1.5rem; }
             p { font-size: 1.15rem; margin-bottom: 1.6rem; }
-            #countdown { font-size: 1.4rem; margin: 2rem 0; }
             .romantic-img { max-width: 320px; margin: 1.8rem auto; }
             .cta-btn { padding: 1rem 2.8rem; font-size: 1.3rem; }
+            .countdown-container { gap: 1.5rem; }
+            .unit { padding: 1.2rem 1rem; min-width: 80px; }
+            .number { font-size: 2.4rem; }
+            .countdown-subtitle { font-size: 1.3rem; margin-top: 1.8rem; }
         }
         @media (max-width: 480px) {
             h1 { font-size: 2.1rem; }
             p { font-size: 1.1rem; }
-            #countdown { font-size: 1.3rem; }
+            #countdown { margin: 2.5rem 0; }
+            .unit { padding: 1rem; min-width: 70px; }
+            .number { font-size: 2.2rem; }
+            .label { font-size: 0.9rem; }
+            .countdown-subtitle { font-size: 1.2rem; }
             .card { padding: 2rem 1.5rem; }
             .cta-btn { padding: 0.9rem 2.5rem; font-size: 1.25rem; }
         }
         @media (max-width: 360px) {
             h1 { font-size: 1.9rem; }
             p { font-size: 1.05rem; }
-            #countdown { font-size: 1.2rem; }
+            .number { font-size: 2rem; }
         }
     </style>
 </head>
@@ -126,11 +164,11 @@
             
             <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Soft pink roses and hearts" class="romantic-img">
             
-            <div id="countdown">Counting down...</div>
+            <div id="countdown"></div>
             
             <p>I have a little message just for you...</p>
             
-            <a href="index.html" class="cta-btn">Answer Me ❤️</a>
+            <a href="proposal.html" class="cta-btn">Open My Message ❤️</a>
         </div>
     </div>
 
@@ -150,17 +188,17 @@
             ease: 'power2.out'
         });
 
-        // Live countdown to Valentine's Day 2026
+        // Elegant countdown
         function startCountdown() {
             const target = new Date('2026-02-14T00:00:00').getTime();
             const countdownEl = document.getElementById('countdown');
 
-            setInterval(() => {
+            function update() {
                 const now = Date.now();
                 const diff = target - now;
 
                 if (diff <= 0) {
-                    countdownEl.textContent = "Happy Valentine's Day! ❤️";
+                    countdownEl.innerHTML = `<p style="font-size: 1.8rem; color: #c2185b; font-weight: 600;">Happy Valentine's Day! ❤️</p>`;
                     return;
                 }
 
@@ -170,13 +208,30 @@
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
                 countdownEl.innerHTML = `
-                    Only <strong>${days}</strong> days, 
-                    <strong>${hours}</strong> hours, 
-                    <strong>${minutes}</strong> minutes, and 
-                    <strong>${seconds}</strong> seconds<br>
-                    until Valentine's Day ❤️
+                    <div class="countdown-container">
+                        <div class="unit">
+                            <div class="number">${days}</div>
+                            <div class="label">Days</div>
+                        </div>
+                        <div class="unit">
+                            <div class="number">${hours}</div>
+                            <div class="label">Hours</div>
+                        </div>
+                        <div class="unit">
+                            <div class="number">${minutes}</div>
+                            <div class="label">Minutes</div>
+                        </div>
+                        <div class="unit">
+                            <div class="number">${seconds}</div>
+                            <div class="label">Seconds</div>
+                        </div>
+                    </div>
+                    <div class="countdown-subtitle">until Valentine's Day ❤️</div>
                 `;
-            }, 1000);
+            }
+
+            update();
+            setInterval(update, 1000);
         }
 
         startCountdown();
